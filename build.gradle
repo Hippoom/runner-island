@@ -1,0 +1,36 @@
+plugins {
+    id 'org.springframework.boot' version '1.5.2.RELEASE'
+    id "io.spring.dependency-management" version "1.0.1.RELEASE"
+
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencyManagement {
+    dependencies {
+        dependency "org.projectlombok:lombok:1.16.10"
+    }
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok"
+    testCompileOnly "org.projectlombok:lombok"
+
+    compile("org.springframework.boot:spring-boot-starter-web")
+}
+
+idea {
+    module {
+        scopes.COMPILE.plus += [configurations.compileOnly]
+    }
+}
