@@ -6,6 +6,8 @@ plugins {
 
 apply plugin: 'idea'
 apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -27,6 +29,43 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok"
 
     compile("org.springframework.boot:spring-boot-starter-web")
+
+    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4-rc-3'
+    testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.9'
+    testCompile('com.athaydes:spock-reports:1.2.13') {
+        transitive = false // this avoids affecting your version of Groovy/Spock
+    }
+
+}
+
+test {
+    exclude '**/specs/*'
+    exclude '**/*LearningTest*'
+    exclude '**/*Console*'
+
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+}
+
+test.finalizedBy jacocoTestReport
+
+task featureTest(type: Test) {
+    // this task will be executed in isolation since all artifacts have been built and deployed
+    dependsOn = []
+
+    include '**/specs/*'
+
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+    outputs.upToDateWhen { false }//force to always rerun
+
+    reports {
+        html {
+            destination = "$buildDir/reports/feature"
+        }
+    }
 }
 
 idea {
