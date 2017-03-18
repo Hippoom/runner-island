@@ -42,3 +42,11 @@ As a runner
 I am able to unlock the next stage
 so that I can challenge the new task  
 ```
+
+### Runner list tasks
+
+```
+As a runner
+I want to list the tasks
+so that I can see my current status  
+```
